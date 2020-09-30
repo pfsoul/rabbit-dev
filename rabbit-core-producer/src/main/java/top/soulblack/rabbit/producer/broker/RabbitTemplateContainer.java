@@ -13,6 +13,11 @@ import org.springframework.stereotype.Component;
 import top.soulblack.rabbit.api.beans.enums.MessageTypeEnum;
 import top.soulblack.rabbit.api.config.MessageException;
 import top.soulblack.rabbit.api.model.Message;
+import top.soulblack.rabbit.common.convert.GenericMessageConverter;
+import top.soulblack.rabbit.common.convert.RabbitMessageConverter;
+import top.soulblack.rabbit.common.serializer.Serializer;
+import top.soulblack.rabbit.common.serializer.SerializerFactory;
+import top.soulblack.rabbit.common.serializer.impl.JacksonSerializerFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -27,6 +32,8 @@ import java.util.Map;
 public class RabbitTemplateContainer implements RabbitTemplate.ConfirmCallback {
 
     private Map<String /* topic */, RabbitTemplate> rabbitMap = Maps.newConcurrentMap();
+
+    private SerializerFactory serializerFactory = JacksonSerializerFactory.INSTANCE;
 
     private Splitter splitter = Splitter.on("#");
 
@@ -46,8 +53,13 @@ public class RabbitTemplateContainer implements RabbitTemplate.ConfirmCallback {
         newTemplate.setExchange(topic);
         newTemplate.setRetryTemplate(new RetryTemplate());
         newTemplate.setRoutingKey(message.getRoutingKey());
-        // 对于message的序列化方式
-        //rabbitTemplate.setMessageConverter();
+
+        // 对于message的序列化方式 添加序列化和反序列化对象
+        Serializer serializer = serializerFactory.create();
+        GenericMessageConverter genericMessageConverter = new GenericMessageConverter(serializer);
+        RabbitMessageConverter rabbitMessageConverter = new RabbitMessageConverter(genericMessageConverter);
+        rabbitTemplate.setMessageConverter(rabbitMessageConverter);
+
         if (!MessageTypeEnum.FAST_MESSAGE.name().equals(message.getMessageType())) {
             newTemplate.setConfirmCallback(this);
             //事务设置：newTemplate.setChannelTransacted(true);
