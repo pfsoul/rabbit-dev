@@ -12,4 +12,17 @@
     <artifactId>rabbit-task</artifactId>
 
 
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.shardingsphere.elasticjob</groupId>
+            <artifactId>elasticjob-lite-core</artifactId>
+            <version>3.0.0-alpha</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.shardingsphere.elasticjob</groupId>
+            <artifactId>elasticjob-lite-spring</artifactId>
+            <version>3.0.0-alpha</version>
+        </dependency>
+    </dependencies>
+
 </project>

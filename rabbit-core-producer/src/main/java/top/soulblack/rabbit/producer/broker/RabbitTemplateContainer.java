@@ -18,6 +18,7 @@ import top.soulblack.rabbit.common.convert.RabbitMessageConverter;
 import top.soulblack.rabbit.common.serializer.Serializer;
 import top.soulblack.rabbit.common.serializer.SerializerFactory;
 import top.soulblack.rabbit.common.serializer.impl.JacksonSerializerFactory;
+import top.soulblack.rabbit.producer.serivce.MessageStoreService;
 
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,9 @@ public class RabbitTemplateContainer implements RabbitTemplate.ConfirmCallback {
     private SerializerFactory serializerFactory = JacksonSerializerFactory.INSTANCE;
 
     private Splitter splitter = Splitter.on("#");
+
+    @Autowired
+    private MessageStoreService messageStoreService;
 
     // amqp 包
     @Autowired
@@ -78,6 +82,8 @@ public class RabbitTemplateContainer implements RabbitTemplate.ConfirmCallback {
         Long sendTime = Long.parseLong(strings.get(1));
         // 成功返回结果
         if (ack) {
+            // 当broker返回ack成功是，更新一下日志里对应的消息发送状态为SendOK
+            this.messageStoreService.success(messageId);
             log.info("send message is OK, confirm messageId:{}, sendTime:{}", messageId, sendTime);
         } else {
             log.warn("send message is FAIL, confirm messageId:{}, sendTime:{}", messageId, sendTime);

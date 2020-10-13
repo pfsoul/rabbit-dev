@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.soulblack.rabbit.common.mapper.BrokerMessageMapper">
+  <resultMap id="BaseResultMap" type="top.soulblack.rabbit.common.model.BrokerMessage">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="message_id" jdbcType="VARCHAR" property="messageId" />
+    <result column="message" jdbcType="VARCHAR" property="message" />
+    <result column="try_count" jdbcType="INTEGER" property="tryCount" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="next_retry" jdbcType="TIMESTAMP" property="nextRetry" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+</mapper>
