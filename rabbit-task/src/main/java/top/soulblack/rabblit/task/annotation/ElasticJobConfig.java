@@ -10,7 +10,7 @@ import java.lang.annotation.*;
 @Documented
 public @interface ElasticJobConfig {
 
-    String name(); //elasticjob的名称
+    String name(); //elasticjob的全路径名称
 
     String cron() default "";
 
@@ -19,6 +19,8 @@ public @interface ElasticJobConfig {
     String shardingItemParameters() default "";
 
     String jobParameter() default "";
+
+    String listener() default "";
 
     boolean failover() default false;
 

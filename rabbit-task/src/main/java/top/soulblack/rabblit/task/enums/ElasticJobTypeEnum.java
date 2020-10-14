@@ -17,6 +17,24 @@ public enum ElasticJobTypeEnum {
         this.desc = desc;
     }
 
+    public static boolean isElasticJob(String simpleName) {
+        for (ElasticJobTypeEnum simpleEnum : ElasticJobTypeEnum.values()) {
+            if (simpleEnum.getType().equals(simpleName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static ElasticJobTypeEnum getType(String simpleName) {
+        for (ElasticJobTypeEnum simpleEnum : ElasticJobTypeEnum.values()) {
+            if (simpleEnum.getType().equals(simpleName)) {
+                return simpleEnum;
+            }
+        }
+        return null;
+    }
+
     public String getType() {
         return type;
     }
