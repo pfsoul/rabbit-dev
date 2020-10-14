@@ -7,6 +7,7 @@ import top.soulblack.rabbit.common.mapper.BrokerMessageMapper;
 import top.soulblack.rabbit.common.model.BrokerMessage;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by lxf on 2020/10/12
@@ -40,5 +41,11 @@ public class MessageStoreService {
         brokerMessage.setStatus(status);
         brokerMessage.setUpdateTime(new Date());
         brokerMessageMapper.updateByPrimaryKeySelective(brokerMessage);
+    }
+
+    public List<BrokerMessage> selectFailMessage() {
+        BrokerMessage brokerMessage = new BrokerMessage();
+        brokerMessage.setStatus(BrokerMessageStatusEnum.SENDING.getStatus());
+        return brokerMessageMapper.select(brokerMessage);
     }
 }
