@@ -1,4 +1,4 @@
-package top.soulblack.rabblit.task;
+package top.soulblack.rabbit.task;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

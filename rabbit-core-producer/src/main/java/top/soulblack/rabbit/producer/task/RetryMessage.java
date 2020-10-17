@@ -1,15 +1,14 @@
 package top.soulblack.rabbit.producer.task;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shardingsphere.elasticjob.api.ShardingContext;
 import org.apache.shardingsphere.elasticjob.dataflow.job.DataflowJob;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
-import top.soulblack.rabbit.api.beans.enums.MessageTypeEnum;
-import top.soulblack.rabbit.api.model.Message;
-import top.soulblack.rabbit.common.enums.BrokerMessageStatusEnum;
 import top.soulblack.rabbit.common.model.BrokerMessage;
 import top.soulblack.rabbit.producer.serivce.MessageStoreService;
-import top.soulblack.rabblit.task.annotation.ElasticJobConfig;
+import top.soulblack.rabbit.task.annotation.ElasticJobConfig;
 
 import java.util.List;
 
@@ -18,11 +17,13 @@ import java.util.List;
  */
 @ElasticJobConfig(
         name = "top.soulblack.rabbit.producer.task.RetryMessage",
-        description = "可靠性头题消息补偿任务",
+        nickName = "retryMessage",
+        description = "可靠性投递消息补偿任务",
         overwrite = true,
         cron = "0/10 * * * * ?",
         shardingTotalCount = 1
 )
+@Slf4j
 @Component
 public class RetryMessage implements DataflowJob<BrokerMessage> {
 
@@ -32,6 +33,7 @@ public class RetryMessage implements DataflowJob<BrokerMessage> {
     // 抓取的信息
     @Override
     public List<BrokerMessage> fetchData(ShardingContext shardingContext) {
+        log.info("执行fetchData");
         List<BrokerMessage> brokerMessages = messageStoreService.selectFailMessage();
         return null;
     }

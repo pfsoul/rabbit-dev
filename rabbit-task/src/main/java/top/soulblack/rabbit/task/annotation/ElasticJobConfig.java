@@ -1,4 +1,4 @@
-package top.soulblack.rabblit.task.annotation;
+package top.soulblack.rabbit.task.annotation;
 
 import java.lang.annotation.*;
 
@@ -11,6 +11,8 @@ import java.lang.annotation.*;
 public @interface ElasticJobConfig {
 
     String name(); //elasticjob的全路径名称
+
+    String nickName(); //用于存储context.getBean中获取实例
 
     String cron() default "";
 

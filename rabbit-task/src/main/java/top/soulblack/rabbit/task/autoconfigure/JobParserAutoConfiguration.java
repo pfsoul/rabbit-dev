@@ -1,4 +1,4 @@
-package top.soulblack.rabblit.task.autoconfigure;
+package top.soulblack.rabbit.task.autoconfigure;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shardingsphere.elasticjob.reg.zookeeper.ZookeeperConfiguration;
@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import top.soulblack.rabblit.task.parser.ElasticJobConfParser;
+import top.soulblack.rabbit.task.parser.ElasticJobConfParser;
 
 /**
  * Created by lxf on 2020/10/13
@@ -16,7 +16,7 @@ import top.soulblack.rabblit.task.parser.ElasticJobConfParser;
 @Slf4j
 @Configuration
 // 存在该配置项则加载，否则不加载
-@ConditionalOnProperty(prefix = "elastic.job.zk", name = {"namespace","severLists"}, matchIfMissing = false)
+@ConditionalOnProperty(prefix = "elastic.job.zk", name = {"namespace","serverLists"}, matchIfMissing = false)
 @EnableConfigurationProperties(JobZookeeperProperties.class)
 public class JobParserAutoConfiguration {
 

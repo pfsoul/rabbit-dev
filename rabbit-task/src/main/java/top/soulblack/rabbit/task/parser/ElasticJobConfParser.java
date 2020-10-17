@@ -1,19 +1,11 @@
-package top.soulblack.rabblit.task.parser;
+package top.soulblack.rabbit.task.parser;
 
-import com.sun.org.glassfish.external.statistics.CountStatistic;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.shardingsphere.elasticjob.api.ElasticJob;
 import org.apache.shardingsphere.elasticjob.api.JobConfiguration;
-import org.apache.shardingsphere.elasticjob.api.ShardingContext;
-import org.apache.shardingsphere.elasticjob.api.listener.ElasticJobListener;
+import org.apache.shardingsphere.elasticjob.dataflow.job.DataflowJob;
 import org.apache.shardingsphere.elasticjob.lite.api.bootstrap.impl.ScheduleJobBootstrap;
-import org.apache.shardingsphere.elasticjob.lite.internal.schedule.JobScheduler;
-import org.apache.shardingsphere.elasticjob.lite.internal.schedule.LiteJob;
 import org.apache.shardingsphere.elasticjob.reg.zookeeper.ZookeeperRegistryCenter;
-import org.apache.shardingsphere.elasticjob.simple.job.SimpleJob;
-import org.apache.shardingsphere.elasticjob.tracing.api.TracingConfiguration;
-import org.quartz.Job;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -21,10 +13,9 @@ import org.springframework.beans.factory.support.ManagedList;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
-import sun.rmi.runtime.Log;
-import top.soulblack.rabblit.task.annotation.ElasticJobConfig;
-import top.soulblack.rabblit.task.autoconfigure.JobZookeeperProperties;
-import top.soulblack.rabblit.task.enums.ElasticJobTypeEnum;
+import top.soulblack.rabbit.task.annotation.ElasticJobConfig;
+import top.soulblack.rabbit.task.autoconfigure.JobZookeeperProperties;
+import top.soulblack.rabbit.task.enums.ElasticJobTypeEnum;
 
 import java.util.Iterator;
 import java.util.List;
@@ -49,13 +40,14 @@ public class ElasticJobConfParser implements ApplicationListener<ApplicationRead
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
+        log.info("开始配置job");
         try {
             ApplicationContext context = applicationReadyEvent.getApplicationContext();
             // 获取全部带该注解的Bean
             Map<String, Object> beanMap = context.getBeansWithAnnotation(ElasticJobConfig.class);
 
             for (Iterator<?> it = beanMap.values().iterator(); it.hasNext(); ) {
-                Object confBean = it.hasNext();
+                Object confBean = it.next();
                 Class<?> clazz = confBean.getClass();
                 // 假如该类为匿名内部类或代理类
                 if (clazz.getName().indexOf("$") > 0) {
@@ -111,11 +103,11 @@ public class ElasticJobConfParser implements ApplicationListener<ApplicationRead
 
                 // 创建一个Spring的beanDefinition
                 BeanDefinitionBuilder factory = BeanDefinitionBuilder.rootBeanDefinition(ScheduleJobBootstrap.class);
-                factory.setInitMethodName("init");
+//                factory.setInitMethodName("init");
                 // 多个共用，多例模式
                 factory.setScope("prototype");
                 factory.addConstructorArgValue(zookeeperRegistryCenter);
-                factory.addConstructorArgValue(jobClass);
+                factory.addConstructorArgValue(context.getBean(conf.nickName()));
                 factory.addConstructorArgValue(config);
                 factory.addConstructorArgValue(listeners);
 
@@ -125,12 +117,14 @@ public class ElasticJobConfParser implements ApplicationListener<ApplicationRead
                 defaultListableBeanFactory.registerBeanDefinition(registerBeanName, factory.getBeanDefinition());
 
                 ScheduleJobBootstrap scheduleJobBootstrap = (ScheduleJobBootstrap) context.getBean(registerBeanName);
+//                ScheduleJobBootstrap scheduleJobBootstrap = new ScheduleJobBootstrap(zookeeperRegistryCenter, jobTypeName, config);
                 scheduleJobBootstrap.schedule();
 
                 log.info("启动elastic-job作业： {}", jobName);
             }
             log.info("共计启动作业数目： {}个", beanMap.size());
         } catch (Exception e) {
+            e.printStackTrace();
             log.error("elastic job启动异常，系统强制退出");
             System.exit(1);
         }

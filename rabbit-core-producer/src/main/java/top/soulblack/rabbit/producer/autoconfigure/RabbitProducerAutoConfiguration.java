@@ -2,7 +2,7 @@ package top.soulblack.rabbit.producer.autoconfigure;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import top.soulblack.rabblit.task.annotation.EnableElasticJob;
+import top.soulblack.rabbit.task.annotation.EnableElasticJob;
 
 /**
  * 自动装配的类

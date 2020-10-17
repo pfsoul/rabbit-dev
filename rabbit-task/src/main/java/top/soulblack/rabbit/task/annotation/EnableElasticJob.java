@@ -1,7 +1,7 @@
-package top.soulblack.rabblit.task.annotation;
+package top.soulblack.rabbit.task.annotation;
 
 import org.springframework.context.annotation.Import;
-import top.soulblack.rabblit.task.autoconfigure.JobParserAutoConfiguration;
+import top.soulblack.rabbit.task.autoconfigure.JobParserAutoConfiguration;
 
 import java.lang.annotation.*;
 

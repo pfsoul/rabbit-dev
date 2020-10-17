@@ -5,6 +5,7 @@ import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.support.converter.MessageConversionException;
 import org.springframework.amqp.support.converter.MessageConverter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import top.soulblack.rabbit.common.serializer.Serializer;
 
@@ -15,7 +16,7 @@ import java.lang.reflect.Type;
  */
 @Component
 public class GenericMessageConverter implements MessageConverter {
-
+    @Autowired
     private Serializer serializer;
 
     public GenericMessageConverter(Serializer serializer) {

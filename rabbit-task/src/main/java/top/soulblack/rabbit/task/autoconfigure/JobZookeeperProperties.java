@@ -1,4 +1,4 @@
-package top.soulblack.rabblit.task.autoconfigure;
+package top.soulblack.rabbit.task.autoconfigure;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -19,14 +19,14 @@ public class JobZookeeperProperties {
     private Integer maxRetries = 3;
 
     // 秒为单位
-    private Integer connectionTimeoutMilliseconds = 10000;
+    private Integer connectionTimeoutMilliseconds = 50000;
 
     // 连接超时时间
     private Integer sessionTimeoutMilliseconds = 60000;
 
-    private Integer baseSleepTimeMilliseconds = 1000;
+    private Integer baseSleepTimeMilliseconds = 10000;
 
-    private Integer maxSleepTimeMilliseconds = 3000;
+    private Integer maxSleepTimeMilliseconds = 30000;
 
     private String digest = "";
 
