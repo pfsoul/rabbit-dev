@@ -1,5 +1,6 @@
 package top.soulblack.rabbit.producer.serivce;
 
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.soulblack.rabbit.common.enums.BrokerMessageStatusEnum;
@@ -44,8 +45,10 @@ public class MessageStoreService {
     }
 
     public List<BrokerMessage> selectFailMessage() {
-        BrokerMessage brokerMessage = new BrokerMessage();
-        brokerMessage.setStatus(BrokerMessageStatusEnum.SENDING.getStatus());
-        return brokerMessageMapper.select(brokerMessage);
+        return brokerMessageMapper.selectFailMessage(BrokerMessageStatusEnum.SENDING.getStatus());
+    }
+
+    public void updateRetryCount(String messageId) {
+        brokerMessageMapper.updateRetryCount(messageId, new Date());
     }
 }

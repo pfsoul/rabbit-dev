@@ -73,17 +73,22 @@ public class RabbitTemplateContainer implements RabbitTemplate.ConfirmCallback {
         return rabbitMap.get(topic);
     }
 
-    // 回调确认方法
+    // 回调确认方法 无论是confirm消息还是reliant消息，都会回调confirm
     @Override
     public void confirm(CorrelationData correlationData, boolean ack, String cause) {
         // 具体的消息应答
         List<String> strings = splitter.splitToList(correlationData.getId());
         String messageId = strings.get(0);
         Long sendTime = Long.parseLong(strings.get(1));
+        String messageType = strings.get(2);
         // 成功返回结果
         if (ack) {
             // 当broker返回ack成功是，更新一下日志里对应的消息发送状态为SendOK
-            this.messageStoreService.success(messageId);
+
+            // 如果当前消息为reliant消息，则更新状态
+            if (messageType.equals(MessageTypeEnum.RELIANT_MESSAGE.name())) {
+                this.messageStoreService.success(messageId);
+            }
             log.info("send message is OK, confirm messageId:{}, sendTime:{}", messageId, sendTime);
         } else {
             log.warn("send message is FAIL, confirm messageId:{}, sendTime:{}", messageId, sendTime);

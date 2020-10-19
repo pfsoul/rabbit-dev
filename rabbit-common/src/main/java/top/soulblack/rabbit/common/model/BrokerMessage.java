@@ -1,5 +1,7 @@
 package top.soulblack.rabbit.common.model;
 
+import top.soulblack.rabbit.api.model.Message;
+
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -13,7 +15,7 @@ public class BrokerMessage {
     @GeneratedValue(generator = "JDBC")
     private String messageId;
 
-    private String message;
+    private Message message;
 
     @Column(name = "try_count")
     private Integer tryCount;
@@ -46,15 +48,15 @@ public class BrokerMessage {
     /**
      * @return message
      */
-    public String getMessage() {
+    public Message getMessage() {
         return message;
     }
 
     /**
      * @param message
      */
-    public void setMessage(String message) {
-        this.message = message == null ? null : message.trim();
+    public void setMessage(Message message) {
+        this.message = message;
     }
 
     /**

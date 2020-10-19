@@ -58,7 +58,7 @@ public class RabbitBrokerImpl implements RabbitBroker{
         brokerMessage.setNextRetry(DateUtils.addMinutes(new Date(), TIMEOUT));
         brokerMessage.setCreateTime(new Date());
         brokerMessage.setUpdateTime(new Date());
-        brokerMessage.setMessage(JSONObject.toJSONString(message));
+        brokerMessage.setMessage(message);
         messageStoreService.insert(brokerMessage);
 
         // 执行真正的发送逻辑
@@ -72,7 +72,7 @@ public class RabbitBrokerImpl implements RabbitBroker{
      */
     private void sendKernel(Message message) {
         AsyncBaseQueue.submit((Runnable)() ->{
-            CorrelationData correlationData = new CorrelationData(String.format("%s#%s", message.getMessageId(), System.currentTimeMillis()));
+            CorrelationData correlationData = new CorrelationData(String.format("%s#%s#%s", message.getMessageId(), System.currentTimeMillis(), message.getMessageType()));
             RabbitTemplate rabbitTemplate = rabbitTemplateContainer.getTemplate(message);
             rabbitTemplate.convertAndSend(
                     message.getTopic(),

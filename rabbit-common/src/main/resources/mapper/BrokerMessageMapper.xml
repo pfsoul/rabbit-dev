@@ -6,11 +6,22 @@
       WARNING - @mbg.generated
     -->
     <id column="message_id" jdbcType="VARCHAR" property="messageId" />
-    <result column="message" jdbcType="VARCHAR" property="message" />
+    <result column="message" jdbcType="VARCHAR" property="message" typeHandler="top.soulblack.rabbit.producer.handler.MessageTypeHandler"/>
     <result column="try_count" jdbcType="INTEGER" property="tryCount" />
     <result column="status" jdbcType="VARCHAR" property="status" />
     <result column="next_retry" jdbcType="TIMESTAMP" property="nextRetry" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
+
+  <select id="selectFailMessage" resultMap="BaseResultMap">
+    select * from broker_message
+    where status = #{status} and next_retry &lt; now()
+  </select>
+  <update id="updateRetryCount" >
+    update broker_message
+    set try_count = try_count + 1,
+        update_time = #{updateTime, jdbcType=TIMESTAMP}
+    where id = #{messageId}
+  </update>
 </mapper>
