@@ -15,6 +15,7 @@ import top.soulblack.rabbit.producer.config.AsyncBaseQueue;
 import top.soulblack.rabbit.producer.serivce.MessageStoreService;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by lxf on 2020/9/24
@@ -64,6 +65,24 @@ public class RabbitBrokerImpl implements RabbitBroker{
         // 执行真正的发送逻辑
         message.setMessageType(MessageTypeEnum.RELIANT_MESSAGE.name());
         sendKernel(message);
+    }
+
+    @Override
+    public void sendMessages() {
+        List<Message> messages = MessageHolder.clear();
+        messages.forEach(message -> {
+            AsyncBaseQueue.submit((Runnable)() ->{
+                CorrelationData correlationData = new CorrelationData(String.format("%s#%s#%s", message.getMessageId(), System.currentTimeMillis(), message.getMessageType()));
+                RabbitTemplate rabbitTemplate = rabbitTemplateContainer.getTemplate(message);
+                rabbitTemplate.convertAndSend(
+                        message.getTopic(),
+                        message.getRoutingKey(),
+                        message,
+                        correlationData
+                );
+                log.info("#RabbitBrokerImpl.sendMessages# : rabbitMQ Id:{}", message.getMessageId());
+            });
+        });
     }
 
     /**

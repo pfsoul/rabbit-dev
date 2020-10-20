@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import top.soulblack.rabbit.api.beans.enums.MessageTypeEnum;
 import top.soulblack.rabbit.api.config.MessageException;
 import top.soulblack.rabbit.api.model.Message;
@@ -27,6 +28,11 @@ public class ProducerClient implements MessageProducer {
 
     @Override
     public void send(Message message, SendCallBack sendCallBack) throws MessageException {
+
+    }
+
+    @Override
+    public void send(Message message) throws MessageException {
         Preconditions.checkNotNull(message.getTopic());
         String messageType = message.getMessageType();
         MessageTypeEnum typeEnum = MessageTypeEnum.getEnumByStr(messageType);
@@ -46,13 +52,18 @@ public class ProducerClient implements MessageProducer {
         }
     }
 
-    @Override
-    public void send(Message message) throws MessageException {
-
-    }
-
+    /**
+     * 假如批量发送message，则设置为快速消息
+     */
     @Override
     public void send(List<Message> messages) throws MessageException {
-
+        if (CollectionUtils.isEmpty(messages)) {
+            return;
+        }
+        messages.forEach(message -> {
+            message.setMessageType(MessageTypeEnum.FAST_MESSAGE.name());
+            MessageHolder.add(message);
+        });
+        rabbitBroker.sendMessages();
     }
 }
