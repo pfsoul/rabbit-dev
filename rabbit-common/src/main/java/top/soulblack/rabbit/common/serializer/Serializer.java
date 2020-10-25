@@ -1,5 +1,7 @@
 package top.soulblack.rabbit.common.serializer;
 
+import org.springframework.stereotype.Component;
+
 /**
  * Created by lxf on 2020/9/29
  * 序列化与反序列化的接口

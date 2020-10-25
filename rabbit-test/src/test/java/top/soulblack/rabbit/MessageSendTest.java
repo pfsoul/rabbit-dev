@@ -1,5 +1,6 @@
 package top.soulblack.rabbit;
 
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,6 +23,7 @@ public class MessageSendTest {
     @Autowired
     private ProducerClient producerClient;
 
+    @Test
     public void testProducerClient() throws Exception {
         for (int i = 0; i < 1; i++) {
             String uniqueId = UUID.randomUUID().toString();
@@ -31,7 +33,7 @@ public class MessageSendTest {
             Message message = new Message(
                     uniqueId,
                     "exchange-1",
-                    "springboot.abc",
+                    "springboot.rabbit",
                     attributes,
                     5000,
                     MessageTypeEnum.RELIANT_MESSAGE.name()
@@ -39,6 +41,6 @@ public class MessageSendTest {
 
             producerClient.send(message);
         }
-        Thread.sleep(10000);
+        Thread.sleep(50000);
     }
 }

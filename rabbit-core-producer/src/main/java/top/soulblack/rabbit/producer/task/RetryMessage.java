@@ -43,7 +43,7 @@ public class RetryMessage implements DataflowJob<BrokerMessage> {
     public List<BrokerMessage> fetchData(ShardingContext shardingContext) {
         log.info("执行fetchData");
         List<BrokerMessage> brokerMessages = messageStoreService.selectFailMessage();
-        return null;
+        return brokerMessages;
     }
 
     @Override
@@ -56,7 +56,7 @@ public class RetryMessage implements DataflowJob<BrokerMessage> {
                 // 每次重试更新try_count字段
                 messageStoreService.updateRetryCount(v.getMessageId());
                 // 重试时只需要confirm投递即可
-                rabbitBroker.confirmSend(v.getMessage());
+                rabbitBroker.confirmSend(JSONObject.parseObject(v.getMessage(), Message.class));
             }
         });
     }

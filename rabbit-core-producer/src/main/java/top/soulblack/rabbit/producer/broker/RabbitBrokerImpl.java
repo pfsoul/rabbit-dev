@@ -1,5 +1,6 @@
 package top.soulblack.rabbit.producer.broker;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateUtils;
@@ -55,11 +56,13 @@ public class RabbitBrokerImpl implements RabbitBroker{
         BrokerMessage brokerMessage = new BrokerMessage();
         brokerMessage.setMessageId(message.getMessageId());
         brokerMessage.setStatus(BrokerMessageStatusEnum.SENDING.getStatus());
+        brokerMessage.setTryCount(0);
         // tryCount 在最开始发送的时候不需要进行设置
         brokerMessage.setNextRetry(DateUtils.addMinutes(new Date(), TIMEOUT));
         brokerMessage.setCreateTime(new Date());
         brokerMessage.setUpdateTime(new Date());
-        brokerMessage.setMessage(message);
+        log.info(JSON.toJSONString(message));
+        brokerMessage.setMessage(JSON.toJSONString(message));
         messageStoreService.insert(brokerMessage);
 
         // 执行真正的发送逻辑

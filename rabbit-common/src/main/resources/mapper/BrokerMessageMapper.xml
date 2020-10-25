@@ -6,7 +6,7 @@
       WARNING - @mbg.generated
     -->
     <id column="message_id" jdbcType="VARCHAR" property="messageId" />
-    <result column="message" jdbcType="VARCHAR" property="message" typeHandler="top.soulblack.rabbit.producer.handler.MessageTypeHandler"/>
+    <result column="message" jdbcType="VARCHAR" property="message" />
     <result column="try_count" jdbcType="INTEGER" property="tryCount" />
     <result column="status" jdbcType="VARCHAR" property="status" />
     <result column="next_retry" jdbcType="TIMESTAMP" property="nextRetry" />
@@ -22,6 +22,6 @@
     update broker_message
     set try_count = try_count + 1,
         update_time = #{updateTime, jdbcType=TIMESTAMP}
-    where id = #{messageId}
+    where message_id = #{messageId}
   </update>
 </mapper>

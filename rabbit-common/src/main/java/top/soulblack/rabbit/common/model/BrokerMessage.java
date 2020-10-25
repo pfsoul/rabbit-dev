@@ -15,7 +15,7 @@ public class BrokerMessage {
     @GeneratedValue(generator = "JDBC")
     private String messageId;
 
-    private Message message;
+    private String message;
 
     @Column(name = "try_count")
     private Integer tryCount;
@@ -48,14 +48,14 @@ public class BrokerMessage {
     /**
      * @return message
      */
-    public Message getMessage() {
+    public String getMessage() {
         return message;
     }
 
     /**
      * @param message
      */
-    public void setMessage(Message message) {
+    public void setMessage(String message) {
         this.message = message;
     }
 

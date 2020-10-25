@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import top.soulblack.rabbit.api.beans.enums.MessageTypeEnum;
 import top.soulblack.rabbit.api.config.MessageException;
 import top.soulblack.rabbit.api.model.Message;
+
 import top.soulblack.rabbit.common.convert.GenericMessageConverter;
 import top.soulblack.rabbit.common.convert.RabbitMessageConverter;
 import top.soulblack.rabbit.common.serializer.Serializer;
@@ -62,7 +63,7 @@ public class RabbitTemplateContainer implements RabbitTemplate.ConfirmCallback {
         Serializer serializer = serializerFactory.create();
         GenericMessageConverter genericMessageConverter = new GenericMessageConverter(serializer);
         RabbitMessageConverter rabbitMessageConverter = new RabbitMessageConverter(genericMessageConverter);
-        rabbitTemplate.setMessageConverter(rabbitMessageConverter);
+        newTemplate.setMessageConverter(rabbitMessageConverter);
 
         if (!MessageTypeEnum.FAST_MESSAGE.name().equals(message.getMessageType())) {
             newTemplate.setConfirmCallback(this);

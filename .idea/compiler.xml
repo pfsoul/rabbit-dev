@@ -6,11 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="rabbit-common" />
-        <module name="rabbit-test" />
-        <module name="rabbit-core-producer" />
         <module name="rabbit-task" />
         <module name="rabbit-api" />
+        <module name="rabbit-test" />
+        <module name="rabbit-common" />
+        <module name="rabbit-core-producer" />
       </profile>
     </annotationProcessing>
   </component>
